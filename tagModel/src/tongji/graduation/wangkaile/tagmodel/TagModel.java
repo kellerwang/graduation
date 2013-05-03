@@ -133,60 +133,60 @@ public class TagModel {
 		private String targetFlag;
 
 		// to compute v2f
-		private int W23v2f_jk[] = new int[v3Count];
-		private int v3f_kn[] = new int[v3Count];
+		private double W23v2f_jk[] = new double[v3Count];
+		private double v3f_kn[] = new double[v3Count];
 
 		// to compute v3f
-		private int W13_k1j[] = new int[v1Count];
-		private int v1f_k1n[] = new int[v1Count];
+		private double W13_k1j[] = new double[v1Count];
+		private double v1f_k1n[] = new double[v1Count];
 
-		private int W23v3f_k2j[] = new int[v2Count];
-		private int v2f_k2n[] = new int[v2Count];
+		private double W23v3f_k2j[] = new double[v2Count];
+		private double v2f_k2n[] = new double[v2Count];
 
 		public void reduce(Text key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
 			// to compute v2f
-			int v2fSum = 0;
-			int sumW23_j = 0;
+			double v2fSum = 0;
+			double sumW23_j = 0;
 			// to compute v3f
-			int v3fSum = 0;
-			int sumW31_j = 0;
-			int sumW32_j = 0;
+			double v3fSum = 0;
+			double sumW31_j = 0;
+			double sumW32_j = 0;
 			for (Text val : values) {
 				String strArray[] = val.toString().split("#");
 				targetFlag = strArray[0];
 				if (targetFlag.equals("W23v2f")) {
 					int k = Integer.parseInt(strArray[1]);
-					W23v2f_jk[k] = Integer.parseInt(strArray[2]);
+					W23v2f_jk[k] = Double.parseDouble(strArray[2]);
 				}
 				if (targetFlag.equals("v3f")) {
 					int k = Integer.parseInt(strArray[1]);
-					v3f_kn[k] = Integer.parseInt(strArray[2]);
+					v3f_kn[k] = Double.parseDouble(strArray[2]);
 				}
 				if (targetFlag.equals("sumW23")) {
-					sumW23_j = Integer.parseInt(strArray[1]);
+					sumW23_j = Double.parseDouble(strArray[1]);
 				}
 				if (targetFlag.equals("W13")) {
 					int k1 = Integer.parseInt(strArray[1]);
-					W13_k1j[k1] = Integer.parseInt(strArray[2]);
+					W13_k1j[k1] = Double.parseDouble(strArray[2]);
 				}
 				if (targetFlag.equals("v1f")) {
 					int k1 = Integer.parseInt(strArray[1]);
-					v1f_k1n[k1] = Integer.parseInt(strArray[2]);
+					v1f_k1n[k1] = Double.parseDouble(strArray[2]);
 				}
 				if (targetFlag.equals("W23v3f")) {
 					int k2 = Integer.parseInt(strArray[1]);
-					W23v3f_k2j[k2] = Integer.parseInt(strArray[2]);
+					W23v3f_k2j[k2] = Double.parseDouble(strArray[2]);
 				}
 				if (targetFlag.equals("v2f")) {
 					int k2 = Integer.parseInt(strArray[1]);
-					v2f_k2n[k2] = Integer.parseInt(strArray[2]);
+					v2f_k2n[k2] = Double.parseDouble(strArray[2]);
 				}
 				if (targetFlag.equals("sumW31")) {
-					sumW31_j = Integer.parseInt(strArray[1]);
+					sumW31_j = Double.parseDouble(strArray[1]);
 				}
 				if (targetFlag.equals("sumW32")) {
-					sumW32_j = Integer.parseInt(strArray[1]);
+					sumW32_j = Double.parseDouble(strArray[1]);
 				}
 			}
 			// compute v2f2
@@ -196,7 +196,7 @@ public class TagModel {
 				}
 			}
 			// compute v3f2
-			int sum_v3f = sumW31_j + sumW32_j;
+			double sum_v3f = sumW31_j + sumW32_j;
 			if (sum_v3f != 0) {
 				for (int k1 = 0; k1 < v1Count; k1++) {
 					v3fSum += W13_k1j[k1] * v1f_k1n[k1] / sum_v3f;
@@ -216,26 +216,26 @@ public class TagModel {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		Configuration conf = new Configuration();
-		String[] otherArgs = new GenericOptionsParser(conf, args)
-				.getRemainingArgs();
-		if (otherArgs.length != 2) {
-			System.err.println("Usage: tagmodel <in> <out>");
-			System.exit(2);
-		}
-
-		Job job = new Job(conf, "tagmodel");
-		job.setJarByClass(TagModel.class);
-		job.setMapperClass(TagModelMapper.class);
-		job.setReducerClass(TagModelReducer.class);
-
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(Text.class);
-
-		FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
-		FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
-
-		System.exit(job.waitForCompletion(true) ? 0 : 1);
-	}
+//	public static void main(String[] args) throws Exception {
+//		Configuration conf = new Configuration();
+//		String[] otherArgs = new GenericOptionsParser(conf, args)
+//				.getRemainingArgs();
+//		if (otherArgs.length != 2) {
+//			System.err.println("Usage: tagmodel <in> <out>");
+//			System.exit(2);
+//		}
+//
+//		Job job = new Job(conf, "tagmodel");
+//		job.setJarByClass(TagModel.class);
+//		job.setMapperClass(TagModelMapper.class);
+//		job.setReducerClass(TagModelReducer.class);
+//
+//		job.setOutputKeyClass(Text.class);
+//		job.setOutputValueClass(Text.class);
+//
+//		FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
+//		FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
+//
+//		System.exit(job.waitForCompletion(true) ? 0 : 1);
+//	}
 }
