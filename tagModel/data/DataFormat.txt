@@ -1,0 +1,30 @@
+The dataset is collected by Zhijun Yin and Rui Li at University of Illinois at Urbana and Champaign in Decemeber 2008.
+
+--------------------------------------------------
+class id     ODP class             Amazon Class
+--------------------------------------------------
+0            Books                 Books
+1            ConsumerElectronics   Electronis
+2            Health                HealthPearson
+3            HomeandGarden         HomeGarden
+4            Jewelry               Jewelry
+5            Music                 Music
+6            Office                OfficeProducts
+7            Pet                   PetSupplier
+
+--------------------------------------------------
+Amazon Data Format
+--------------------------------------------------
+ProductID
+ProductTitle
+Tag1(TAB)Frequency1
+Tag2(TAB)Frequency2
+....
+
+--------------------------------------------------
+ODP Data Format
+--------------------------------------------------
+Url
+Tag1(TAB)Frequency1
+Tag2(TAB)Frequency2
+....
