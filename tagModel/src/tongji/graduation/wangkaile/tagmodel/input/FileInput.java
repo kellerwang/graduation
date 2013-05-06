@@ -15,40 +15,44 @@ import tongji.graduation.wangkaile.tagmodel.basic.object.WebObject;
 import tongji.graduation.wangkaile.tagmodel.basic.object.WebSite;
 
 public class FileInput {
-	// ´æ´¢×îÖÕwebObjectÊý¾Ý
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½webObjectï¿½ï¿½ï¿½ï¿½
 	private static Hashtable<Integer, WebObject> webObjectSet;
 	private static Hashtable<String, Integer> tagSet;
 	private static Hashtable<Integer, WebSite> webSiteSet;
-	// Õâ¸öindex¾ÍÊÇºóÃæTagModelÖÐwebObjectµÄid
+	// ï¿½ï¿½ï¿½ï¿½indexï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TagModelï¿½ï¿½webObjectï¿½ï¿½id
 	private static int index = 0;
 	private static int indexWebSite = 0;
-	// Õâ¸öindexTag¾ÍÊÇºóÃæTagModelÖÐtagµÄid
+	// ï¿½ï¿½ï¿½ï¿½indexTagï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TagModelï¿½ï¿½tagï¿½ï¿½id
 	private static int indexTag = 0;
 
 	public static void readFileByLines4Amazon(String fileName, int lable) {
 		File file = new File(fileName);
 		BufferedReader reader = null;
-
+		int indexNow = 0;
 		try {
-			// System.out.println("ÒÔÐÐÎªµ¥Î»¶ÁÈ¡ÎÄ¼þÄÚÈÝ£¬Ò»´Î¶ÁÒ»ÕûÐÐ£º");
+			// System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			reader = new BufferedReader(new FileReader(file));
 			String tempString = null;
 			int flag = 0;
-			// Ò»´Î¶ÁÈëÒ»ÐÐ£¬Ö±µ½¶ÁÈënullÎªÎÄ¼þ½áÊø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½nullï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			WebObject tempObject = new WebObject(lable);
 			tempObject.initializeProbability4UnlableObject();
 			while ((tempString = reader.readLine()) != null) {
-				// ¶Áµ½¿ÕÐÐ£¬¼´ÂíÉÏ´¦ÀíÏÂÒ»¶ÔÏó¡£description¿ÉÒÔÊÇ¿ÕÐÐ£¡
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½descriptionï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				if (tempString.trim().equals("") && flag != 1) {
 					flag = 0;
 					webObjectSet.put(index, tempObject);
 					tempObject = new WebObject(lable);
 					tempObject.initializeProbability4UnlableObject();
 					index++;
-					System.out.println("¿ÕÐÐ");
+					indexNow++;
+//					if(indexNow > 5){
+//						break;
+//					}
+					System.out.println("null string");
 					continue;
 				}
-				// ´ËÊ±ÊäÈëÐÐÎªtags
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tags
 				if (flag == 2) {
 					String[] strArray = tempString.split("	");
 					// int tempInt = strArray.length;
@@ -67,7 +71,7 @@ public class FileInput {
 					tempObject.getTagList().put(tempInt, tempFrequency);
 					continue;
 				}
-				// Èç¹ûÊÇÊý¾ÝidºÍÃèÊö
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½idï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				if (flag == 0 || flag == 1) {
 					switch (flag) {
 					case 0:
@@ -101,27 +105,31 @@ public class FileInput {
 	public static void readFileByLines4Odp(String fileName, int lable) {
 		File file = new File(fileName);
 		BufferedReader reader = null;
-
+		int indexNow = 0;
 		try {
-			// System.out.println("ÒÔÐÐÎªµ¥Î»¶ÁÈ¡ÎÄ¼þÄÚÈÝ£¬Ò»´Î¶ÁÒ»ÕûÐÐ£º");
+			// System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			reader = new BufferedReader(new FileReader(file));
 			String tempString = null;
 			int flag = 0;
-			// Ò»´Î¶ÁÈëÒ»ÐÐ£¬Ö±µ½¶ÁÈënullÎªÎÄ¼þ½áÊø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½nullï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			WebSite tempSite = new WebSite(lable);
 			tempSite.initializeProbability();
 			while ((tempString = reader.readLine()) != null) {
-				// ¶Áµ½¿ÕÐÐ£¬¼´ÂíÉÏ´¦ÀíÏÂÒ»¶ÔÏó¡£description¿ÉÒÔÊÇ¿ÕÐÐ£¡
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½descriptionï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				if (tempString.trim().equals("")) {
 					flag = 0;
 					webSiteSet.put(indexWebSite, tempSite);
 					tempSite = new WebSite(lable);
 					tempSite.initializeProbability();
 					indexWebSite++;
-					System.out.println("¿ÕÐÐ");
+					indexNow++;
+//					if(indexNow > 5){
+//						break;
+//					}
+					System.out.println("null string");
 					continue;
 				}
-				// ´ËÊ±ÊäÈëÐÐÎªtags
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tags
 				if (flag == 1) {
 					String[] strArray = tempString.split("	");
 					// int tempInt = strArray.length;
@@ -139,7 +147,7 @@ public class FileInput {
 					tempSite.getTagList().put(tempInt, tempFrequency);
 					continue;
 				}
-				// Èç¹ûÊÇÊý¾ÝÃèÊö
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				if (flag == 0) {
 					System.out.println("webSiteAddress: " + tempString);
 					tempSite.setDescription(tempString);
@@ -168,7 +176,7 @@ public class FileInput {
 		webObjectSet = new Hashtable<Integer, WebObject>();
 		tagSet = new Hashtable<String, Integer>();
 		webSiteSet = new Hashtable<Integer, WebSite>();
-		// AmazonÊý¾ÝÊäÈë
+		// Amazonï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		readFileByLines4Amazon("data/amazon/Books.txt", 0);
 		readFileByLines4Amazon("data/amazon/Electronics.txt", 1);
 		readFileByLines4Amazon("data/amazon/HealthPersonCare.txt", 2);
@@ -177,7 +185,7 @@ public class FileInput {
 		readFileByLines4Amazon("data/amazon/Music.txt", 5);
 		readFileByLines4Amazon("data/amazon/OfficeProducts.txt", 6);
 		readFileByLines4Amazon("data/amazon/PetSupplies.txt", 7);
-		// odpÊý¾ÝÊäÈë
+		// odpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		readFileByLines4Odp("data/odp/Books.txt", 0);
 		readFileByLines4Odp("data/odp/ConsumerElectronics.txt", 1);
 		readFileByLines4Odp("data/odp/Health.txt", 2);
@@ -198,11 +206,13 @@ public class FileInput {
 			int id = en.getKey();
 			List<Double> listProbability = en.getValue().getProbability();
 			v1f.put(id, listProbability);
+			
 		}
 		for (Entry<Integer, WebObject> en : webObjectSet.entrySet()) {
 			int id = en.getKey();
 			List<Double> listProbability = en.getValue().getProbability();
 			v2f.put(id, listProbability);
+			
 		}
 		for (Entry<Integer, WebObject> en : webObjectSet.entrySet()) {
 			int id = en.getKey();
@@ -221,8 +231,8 @@ public class FileInput {
 		}
 
 		// -----------------------------------------------------------
-		// v1Count£¬v2Count£¬v3Count·Ö±ð¼ÇÂ¼ÁËSÀà£¬TÀà¶ÔÏó£¬TagµÄÊýÁ¿
-		// w3Dic¼ÇÂ¼ÁËËùÒÔtag
+		// v1Countï¿½ï¿½v2Countï¿½ï¿½v3Countï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Tagï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// w3Dicï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tag
 
 		int v1Count = W13.size();
 		int v2Count = W23.size();
@@ -242,6 +252,9 @@ public class FileInput {
 			}
 		}
 		int v3Count = w3Dic.size();
+		System.out.println("v1Count: " + v1Count);
+		System.out.println("v2Count: " + v2Count);
+		System.out.println("v3Count: " + v3Count);
 		// ------------------------------------------------------------
 
 		Hashtable<Integer, List<Double>> v3f = new Hashtable<Integer, List<Double>>();
@@ -253,10 +266,10 @@ public class FileInput {
 			v3f.put(i, fList);
 		}
 		// -----------------------------------------------------------------
-		// sumW13 SÀàÃ¿¸öobjectº¬ÓÐ¶àÉÙ¸ötag
-		// sumW23 TÀàÃ¿¸öobjectº¬ÓÐ¶àÉÙ¸ötag
-		// sumW31 ºÍSÀà¹ØÁªµÄtag³öÏÖµÄÆµÂÊ
-		// sumW32 ºÍTÀà¹ØÁªµÄtag³öÏÖµÄÆµÂÊ
+		// sumW13 Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½objectï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tag
+		// sumW23 Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½objectï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tag
+		// sumW31 ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tagï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// sumW32 ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tagï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 		// u belongs to V1
 		Hashtable<Integer, Double> sumW13 = new Hashtable<Integer, Double>();

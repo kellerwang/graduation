@@ -13,10 +13,12 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 public class TagModel {
-	// 
-	private static int v1Count = 0;
-	private static int v2Count = 0;
-	private static int v3Count = 0;
+//	v1Count: 5536
+//	v2Count: 7904
+//	v3Count: 73912
+	private static int v1Count = 5536;
+	private static int v2Count = 7904;
+	private static int v3Count = 73912;
 
 	public static class TagModelMapper extends Mapper<Object, Text, Text, Text> {
 		private Text map_key = new Text();
@@ -94,7 +96,7 @@ public class TagModel {
 					}
 				}
 				if (targetFlag.equals("sumW13")) {
-					// 
+					//
 				}
 				if (targetFlag.equals("sumW23")) {
 					String j = strArray[1];
@@ -145,6 +147,9 @@ public class TagModel {
 
 		public void reduce(Text key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
+			String strID[] = key.toString().split("#");
+			int keyJ = Integer.parseInt(strID[0]);
+			int keyN = Integer.parseInt(strID[1]);
 			// to compute v2f
 			double v2fSum = 0;
 			double sumW23_j = 0;
@@ -152,90 +157,136 @@ public class TagModel {
 			double v3fSum = 0;
 			double sumW31_j = 0;
 			double sumW32_j = 0;
-			for (Text val : values) {
-				String strArray[] = val.toString().split("#");
-				targetFlag = strArray[0];
-				if (targetFlag.equals("W23v2f")) {
-					int k = Integer.parseInt(strArray[1]);
-					W23v2f_jk[k] = Double.parseDouble(strArray[2]);
+			if (keyJ < v2Count) {
+
+				for (Text val : values) {
+					String strArray[] = val.toString().split("#");
+					targetFlag = strArray[0];
+					if (targetFlag.equals("W23v2f")) {
+						int k = Integer.parseInt(strArray[1]);
+						W23v2f_jk[k] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("v3f")) {
+						int k = Integer.parseInt(strArray[1]);
+						v3f_kn[k] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("sumW23")) {
+						sumW23_j = Double.parseDouble(strArray[1]);
+					}
+					if (targetFlag.equals("W13")) {
+						int k1 = Integer.parseInt(strArray[1]);
+						W13_k1j[k1] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("v1f")) {
+						int k1 = Integer.parseInt(strArray[1]);
+						v1f_k1n[k1] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("W23v3f")) {
+						int k2 = Integer.parseInt(strArray[1]);
+						W23v3f_k2j[k2] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("v2f")) {
+						int k2 = Integer.parseInt(strArray[1]);
+						v2f_k2n[k2] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("sumW31")) {
+						sumW31_j = Double.parseDouble(strArray[1]);
+					}
+					if (targetFlag.equals("sumW32")) {
+						sumW32_j = Double.parseDouble(strArray[1]);
+					}
 				}
-				if (targetFlag.equals("v3f")) {
-					int k = Integer.parseInt(strArray[1]);
-					v3f_kn[k] = Double.parseDouble(strArray[2]);
+				// compute v2f2
+				if (sumW23_j != 0) {
+					for (int k = 0; k < v3Count; k++) {
+						v2fSum += W23v2f_jk[k] * v3f_kn[k] / sumW23_j;
+					}
 				}
-				if (targetFlag.equals("sumW23")) {
-					sumW23_j = Double.parseDouble(strArray[1]);
+				// compute v3f2
+				double sum_v3f = sumW31_j + sumW32_j;
+				if (sum_v3f != 0) {
+					for (int k1 = 0; k1 < v1Count; k1++) {
+						v3fSum += W13_k1j[k1] * v1f_k1n[k1] / sum_v3f;
+					}
+					for (int k2 = 0; k2 < v2Count; k2++) {
+						v3fSum += W23v3f_k2j[k2] * v2f_k2n[k2] / sum_v3f;
+					}
 				}
-				if (targetFlag.equals("W13")) {
-					int k1 = Integer.parseInt(strArray[1]);
-					W13_k1j[k1] = Double.parseDouble(strArray[2]);
+				// get new key and value for v2f
+				reduce_key.set("v2f" + "#" + key.toString());
+				reduce_value.set(String.valueOf(v2fSum));
+				context.write(reduce_key, reduce_value);
+				// get new key and value for v3f
+				reduce_key.set("v3f" + "#" + key.toString());
+				reduce_value.set(String.valueOf(v3fSum));
+				context.write(reduce_key, reduce_value);
+			} else {
+				for (Text val : values) {
+					String strArray[] = val.toString().split("#");
+					targetFlag = strArray[0];
+					if (targetFlag.equals("W13")) {
+						int k1 = Integer.parseInt(strArray[1]);
+						W13_k1j[k1] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("v1f")) {
+						int k1 = Integer.parseInt(strArray[1]);
+						v1f_k1n[k1] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("W23v3f")) {
+						int k2 = Integer.parseInt(strArray[1]);
+						W23v3f_k2j[k2] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("v2f")) {
+						int k2 = Integer.parseInt(strArray[1]);
+						v2f_k2n[k2] = Double.parseDouble(strArray[2]);
+					}
+					if (targetFlag.equals("sumW31")) {
+						sumW31_j = Double.parseDouble(strArray[1]);
+					}
+					if (targetFlag.equals("sumW32")) {
+						sumW32_j = Double.parseDouble(strArray[1]);
+					}
 				}
-				if (targetFlag.equals("v1f")) {
-					int k1 = Integer.parseInt(strArray[1]);
-					v1f_k1n[k1] = Double.parseDouble(strArray[2]);
+
+				// compute v3f2
+				double sum_v3f = sumW31_j + sumW32_j;
+				if (sum_v3f != 0) {
+					for (int k1 = 0; k1 < v1Count; k1++) {
+						v3fSum += W13_k1j[k1] * v1f_k1n[k1] / sum_v3f;
+					}
+					for (int k2 = 0; k2 < v2Count; k2++) {
+						v3fSum += W23v3f_k2j[k2] * v2f_k2n[k2] / sum_v3f;
+					}
 				}
-				if (targetFlag.equals("W23v3f")) {
-					int k2 = Integer.parseInt(strArray[1]);
-					W23v3f_k2j[k2] = Double.parseDouble(strArray[2]);
-				}
-				if (targetFlag.equals("v2f")) {
-					int k2 = Integer.parseInt(strArray[1]);
-					v2f_k2n[k2] = Double.parseDouble(strArray[2]);
-				}
-				if (targetFlag.equals("sumW31")) {
-					sumW31_j = Double.parseDouble(strArray[1]);
-				}
-				if (targetFlag.equals("sumW32")) {
-					sumW32_j = Double.parseDouble(strArray[1]);
-				}
+
+				// get new key and value for v3f
+				reduce_key.set("v3f" + "#" + key.toString());
+				reduce_value.set(String.valueOf(v3fSum));
+				context.write(reduce_key, reduce_value);
 			}
-			// compute v2f2
-			if (sumW23_j != 0) {
-				for (int k = 0; k < v3Count; k++) {
-					v2fSum += W23v2f_jk[k] * v3f_kn[k] / sumW23_j;
-				}
-			}
-			// compute v3f2
-			double sum_v3f = sumW31_j + sumW32_j;
-			if (sum_v3f != 0) {
-				for (int k1 = 0; k1 < v1Count; k1++) {
-					v3fSum += W13_k1j[k1] * v1f_k1n[k1] / sum_v3f;
-				}
-				for (int k2 = 0; k2 < v2Count; k2++) {
-					v3fSum += W23v3f_k2j[k2] * v2f_k2n[k2] / sum_v3f;
-				}
-			}
-			// get new key and value for v2f
-			reduce_key.set("v2f" + "#" + key.toString());
-			reduce_value.set(String.valueOf(v2fSum));
-			context.write(reduce_key, reduce_value);
-			// get new key and value for v2f
-			reduce_key.set("v3f" + "#" + key.toString());
-			reduce_value.set(String.valueOf(v3fSum));
-			context.write(reduce_key, reduce_value);
 		}
 	}
 
-//	public static void main(String[] args) throws Exception {
-//		Configuration conf = new Configuration();
-//		String[] otherArgs = new GenericOptionsParser(conf, args)
-//				.getRemainingArgs();
-//		if (otherArgs.length != 2) {
-//			System.err.println("Usage: tagmodel <in> <out>");
-//			System.exit(2);
-//		}
-//
-//		Job job = new Job(conf, "tagmodel");
-//		job.setJarByClass(TagModel.class);
-//		job.setMapperClass(TagModelMapper.class);
-//		job.setReducerClass(TagModelReducer.class);
-//
-//		job.setOutputKeyClass(Text.class);
-//		job.setOutputValueClass(Text.class);
-//
-//		FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
-//		FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
-//
-//		System.exit(job.waitForCompletion(true) ? 0 : 1);
-//	}
+	public static void main(String[] args) throws Exception {
+		Configuration conf = new Configuration();
+		String[] otherArgs = new GenericOptionsParser(conf, args)
+				.getRemainingArgs();
+		if (otherArgs.length != 2) {
+			System.err.println("Usage: tagmodel <in> <out>");
+			System.exit(2);
+		}
+
+		Job job = new Job(conf, "tagmodel");
+		job.setJarByClass(TagModel.class);
+		job.setMapperClass(TagModelMapper.class);
+		job.setReducerClass(TagModelReducer.class);
+
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
+
+		FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
+		FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
+
+		System.exit(job.waitForCompletion(true) ? 0 : 1);
+	}
 }
