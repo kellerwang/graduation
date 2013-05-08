@@ -322,68 +322,121 @@ public class FileInput {
 			}
 		}
 
-		String path = "input/input.txt";
-		FileWriter fw;
+		int lineNum = 0;
+		String path = "input/input0/part" + lineNum;
+		
 		try {
-			fw = new FileWriter(path, true);
-			PrintWriter pw = new PrintWriter(fw);
+			FileWriter fw0 = new FileWriter(path, true);
+			PrintWriter pw0 = new PrintWriter(fw0);
 
 			for (int i = 0; i < v1Count; i++) {
 				for (int n = 0; n < 8; n++) {
-					pw.println("v1f" + "#" + i + "#" + n + "#"
+					pw0.println("v1f" + "#" + i + "#" + n + "#"
 							+ v1f.get(i).get(n));
 				}
 			}
+			
+			pw0.close();
+			fw0.close();
+			lineNum++;
+			path = "input/input0/part" + lineNum;
+			FileWriter fw1 = new FileWriter(path, true);
+			PrintWriter pw1 = new PrintWriter(fw1);
 			for (int i = 0; i < v2Count; i++) {
 				for (int n = 0; n < 8; n++) {
-					pw.println("v2f" + "#" + i + "#" + n + "#"
+					pw1.println("v2f" + "#" + i + "#" + n + "#"
 							+ v2f.get(i).get(n));
 				}
 			}
+			pw1.close();
+			fw1.close();
+			lineNum++;
+			path = "input/input0/part" + lineNum;
+			FileWriter fw2 = new FileWriter(path, true);
+			PrintWriter pw2 = new PrintWriter(fw2);
 			for (int i = 0; i < v3Count; i++) {
 				for (int n = 0; n < 8; n++) {
-					pw.println("v3f" + "#" + i + "#" + n + "#"
+					pw2.println("v3f" + "#" + i + "#" + n + "#"
 							+ v3f.get(i).get(n));
 				}
 			}
+			pw2.close();
+			fw2.close();
+			lineNum++;
+			path = "input/input0/part" + lineNum;
+			FileWriter fw3 = new FileWriter(path, true);
+			PrintWriter pw3 = new PrintWriter(fw3);
 			for (Entry<Integer, Hashtable<Integer, Double>> en : W13.entrySet()) {
 				int id = en.getKey();
 				for (Entry<Integer, Double> inde : en.getValue().entrySet()) {
 					int tagId = inde.getKey();
 					double value = inde.getValue();
-					pw.println("W13" + "#" + id + "#" + tagId + "#" + value);
+					pw3.println("W13" + "#" + id + "#" + tagId + "#" + value);
 				}
 			}
+			pw3.close();
+			fw3.close();
+			lineNum++;
+			path = "input/input0/part" + lineNum;
+			FileWriter fw4 = new FileWriter(path, true);
+			PrintWriter pw4 = new PrintWriter(fw4);
 			for (Entry<Integer, Hashtable<Integer, Double>> en : W23.entrySet()) {
 				int id = en.getKey();
 				for (Entry<Integer, Double> inde : en.getValue().entrySet()) {
 					int tagId = inde.getKey();
+					if(id == 9 && tagId == 252){
+						System.out.println("here");
+					}
 					double value = inde.getValue();
-					pw.println("W23" + "#" + id + "#" + tagId + "#" + value);
+					pw4.println("W23" + "#" + id + "#" + tagId + "#" + value);
 				}
 			}
+			pw4.close();
+			fw4.close();
+			lineNum++;
+			path = "input/input0/part" + lineNum;
+			FileWriter fw5 = new FileWriter(path, true);
+			PrintWriter pw5 = new PrintWriter(fw5);
 			for(Entry<Integer, Double> en : sumW13.entrySet()){
 				int id = en.getKey();
 				double value = en.getValue();
-				pw.println("sumW13" + "#" + id + "#" + value);
+				pw5.println("sumW13" + "#" + id + "#" + value);
 			}
+			pw5.close();
+			fw5.close();
+			lineNum++;
+			path = "input/input0/part" + lineNum;
+			FileWriter fw6 = new FileWriter(path, true);
+			PrintWriter pw6 = new PrintWriter(fw6);
 			for(Entry<Integer, Double> en : sumW23.entrySet()){
 				int id = en.getKey();
 				double value = en.getValue();
-				pw.println("sumW23" + "#" + id + "#" + value);
+				pw6.println("sumW23" + "#" + id + "#" + value);
 			}
+			pw6.close();
+			fw6.close();
+			lineNum++;
+			path = "input/input0/part" + lineNum;
+			FileWriter fw7 = new FileWriter(path, true);
+			PrintWriter pw7 = new PrintWriter(fw7);
 			for(Entry<Integer, Double> en : sumW31.entrySet()){
 				int id = en.getKey();
 				double value = en.getValue();
-				pw.println("sumW31" + "#" + id + "#" + value);
+				pw7.println("sumW31" + "#" + id + "#" + value);
 			}
+			pw7.close();
+			fw7.close();
+			lineNum++;
+			path = "input/input0/part" + lineNum;
+			FileWriter fw8 = new FileWriter(path, true);
+			PrintWriter pw8 = new PrintWriter(fw8);
 			for(Entry<Integer, Double> en : sumW32.entrySet()){
 				int id = en.getKey();
 				double value = en.getValue();
-				pw.println("sumW32" + "#" + id + "#" + value);
+				pw8.println("sumW32" + "#" + id + "#" + value);
 			}
-			pw.close();
-			fw.close();
+			pw8.close();
+			fw8.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
