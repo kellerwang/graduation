@@ -28,7 +28,7 @@ public class WebObject {
 	}
 	public void initializeProbability4UnlableObject(){
 		for(int i = 0; i < 8; i++){
-			probability.add(i, (double) (1 / 8));
+			probability.add(i, 1.0 / 8);
 		}
 	}
 	

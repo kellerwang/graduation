@@ -286,6 +286,7 @@ public class TagModel {
 
 		FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
 		FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
+		job.setNumReduceTasks(10);
 
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 	}
