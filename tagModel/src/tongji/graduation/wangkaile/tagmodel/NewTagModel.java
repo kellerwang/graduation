@@ -3,10 +3,18 @@ package tongji.graduation.wangkaile.tagmodel;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map.Entry;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -22,7 +30,7 @@ public class NewTagModel {
 	private String uriSumW23;
 	private String uriSumW31;
 	private String uriSumW32;
-	
+
 	public static class TagModelMapper extends
 			Mapper<Object, Text, IntWritable, Text> {
 		private IntWritable map_key = new IntWritable();
@@ -103,9 +111,17 @@ public class NewTagModel {
 		private HashMap<Long, Double> v1f = new HashMap<Long, Double>();
 		private HashMap<Long, Double> v2f = new HashMap<Long, Double>();
 		private HashMap<Long, Double> v3f = new HashMap<Long, Double>();
+		private Hashtable<Integer, Hashtable<Integer, Double>> W13 = new Hashtable<Integer, Hashtable<Integer, Double>>();
+		private Hashtable<Integer, Hashtable<Integer, Double>> W23 = new Hashtable<Integer, Hashtable<Integer, Double>>();
+		private Hashtable<Integer, Double> sumW13 = new Hashtable<Integer, Double>();
+		private Hashtable<Integer, Double> sumW23 = new Hashtable<Integer, Double>();
+		private Hashtable<Integer, Double> sumW31 = new Hashtable<Integer, Double>();
+		private Hashtable<Integer, Double> sumW32 = new Hashtable<Integer, Double>();
 
 		public void reduce(IntWritable key, Iterable<Text> values,
 				Context context) throws IOException, InterruptedException {
+			// deal with the input of v1 v2 v3
+			// -------------------------------------------------------------
 			for (Text val : values) {
 				String strArray[] = val.toString().split("#");
 				String targetFlag = strArray[0];
@@ -131,6 +147,52 @@ public class NewTagModel {
 					}
 				}
 			}
+
+			initializeW("W13", W13);
+			initializeW("W23", W23);
+			initializeSumW("sumW13", sumW13);
+			initializeSumW("sumW23", sumW23);
+			initializeSumW("sumW31", sumW31);
+			initializeSumW("sumW32", sumW32);
+		}
+
+		public void initializeSumW(String type, Hashtable<Integer, Double> sumW) throws IOException{
+			String uri = "hdfs/parameter/" + type;
+			Configuration conf = new Configuration();
+			FileSystem fs = FileSystem.get(URI.create(uri), conf);
+			Path path = new Path(uri);
+			IntWritable keyTemp = new IntWritable();
+			DoubleWritable valueTemp = new DoubleWritable();
+			SequenceFile.Reader reader = null;
+			reader=new SequenceFile.Reader(fs, path, conf);
+			while(reader.next(keyTemp,valueTemp)){  
+				sumW.put(keyTemp.get(), valueTemp.get());
+			}
+			reader.close();
+		}
+		
+		public void initializeW(String type,
+				Hashtable<Integer, Hashtable<Integer, Double>> W)
+				throws IOException {
+			String uri = "hdfs/parameter/" + type;
+			Configuration conf = new Configuration();
+			FileSystem fs = FileSystem.get(URI.create(uri), conf);
+			Path path = new Path(uri);
+			IntWritable keyTemp = new IntWritable();
+			MapWritable valueTemp = new MapWritable();
+			SequenceFile.Reader reader = null;
+			reader = new SequenceFile.Reader(fs, path, conf);
+			while (reader.next(keyTemp, valueTemp)) {
+				int id = keyTemp.get();
+				Hashtable<Integer, Double> tempHash = new Hashtable<Integer, Double>();
+				for (Entry en : valueTemp.entrySet()) {
+					int tagId = (int) en.getKey();
+					double temp = (double) en.getValue();
+					tempHash.put(tagId, temp);
+				}
+				W.put(id, tempHash);
+			}
+			reader.close();
 		}
 	}
 }
