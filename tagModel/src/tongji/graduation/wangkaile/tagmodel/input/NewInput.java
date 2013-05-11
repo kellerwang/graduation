@@ -57,9 +57,9 @@ public class NewInput {
 					tempObject.initializeProbability4UnlableObject();
 					index++;
 					indexNow++;
-					// if(indexNow > 5){
-					// break;
-					// }
+					if (indexNow > 5) {
+						break;
+					}
 					System.out.println("null string");
 					continue;
 				}
@@ -134,9 +134,9 @@ public class NewInput {
 					tempSite.initializeProbability();
 					indexWebSite++;
 					indexNow++;
-					// if(indexNow > 5){
-					// break;
-					// }
+					if (indexNow > 5) {
+						break;
+					}
 					System.out.println("null string");
 					continue;
 				}
@@ -341,6 +341,50 @@ public class NewInput {
 		writeSumWXXSequenceFile("sumW32", sumW32);
 	}
 
+	
+	
+	public static void writeWXXSequenceFile(String type,
+			Hashtable<Integer, Hashtable<Integer, Double>> W)
+			throws IOException {
+		String uri = "hdfs/parameter/" + type;
+		Configuration conf = new Configuration();
+		FileSystem fs;
+		fs = FileSystem.get(URI.create(uri), conf);
+		Path path = new Path(uri);
+		SequenceFile.Writer writer = null;
+		writer = new SequenceFile.Writer(fs, conf, path, IntWritable.class,
+				MapWritable.class);
+		for (Entry<Integer, Hashtable<Integer, Double>> en : W.entrySet()) {
+			IntWritable key = new IntWritable();
+			MapWritable value = new MapWritable();
+			key.set(en.getKey());
+			for (Entry<Integer, Double> inde : en.getValue().entrySet()) {
+				int tagId = inde.getKey();
+				double valueTemp = inde.getValue();
+				value.put(new IntWritable(tagId), new DoubleWritable(valueTemp));
+			}
+			writer.append(key, value);
+		}
+		IOUtils.closeStream(writer);
+	}
+
+	public static void writeFileToHDFS(Hashtable<Integer, List<Double>> vf,
+			String type, int count) throws IOException {
+		String uri = "hdfs/input/input0/" + type;
+		Configuration configuration = new Configuration();
+		FileSystem fs = FileSystem.get(configuration);
+		FSDataOutputStream out = null;
+		out = fs.create(new Path(uri));
+		for (int i = 0; i < count; i++) {
+			for (int n = 0; n < 8; n++) {
+				String strTemp = type + "\t" + i + "#" + n + "#" + vf.get(i).get(n) + "\n";
+				out.writeBytes(strTemp);
+			}
+		}
+		out.flush();
+		out.close();
+	}
+	
 	public static void writeSumWXXSequenceFile(String type,
 			Hashtable<Integer, Double> sumW)
 			throws IOException {
@@ -360,51 +404,5 @@ public class NewInput {
 			writer.append(key, value);
 		}
 		IOUtils.closeStream(writer);
-	}
-	
-	public static void writeWXXSequenceFile(String type,
-			Hashtable<Integer, Hashtable<Integer, Double>> W)
-			throws IOException {
-		String uri = "hdfs/parameter/" + type;
-		Configuration conf = new Configuration();
-		FileSystem fs;
-		fs = FileSystem.get(URI.create(uri), conf);
-		Path path = new Path(uri);
-		SequenceFile.Writer writer = null;
-		writer = new SequenceFile.Writer(fs, conf, path, IntWritable.class,
-				MapWritable.class);
-		for (Entry<Integer, Hashtable<Integer, Double>> en : W.entrySet()) {
-			IntWritable key = new IntWritable();
-			MapWritable value = new MapWritable();
-			key.set(en.getKey());
-			// System.out.println(en.getKey());
-			for (Entry<Integer, Double> inde : en.getValue().entrySet()) {
-				int tagId = inde.getKey();
-				double valueTemp = inde.getValue();
-				value.put(new IntWritable(tagId), new DoubleWritable(valueTemp));
-			}
-//			int size = value.size();
-			writer.append(key, value);
-		}
-		IOUtils.closeStream(writer);
-	}
-
-	public static void writeFileToHDFS(Hashtable<Integer, List<Double>> vf,
-			String type, int count) throws IOException {
-		String uri = "hdfs/input/input0/" + type;
-		Configuration configuration = new Configuration();
-		FileSystem fs = FileSystem.get(configuration);
-		FSDataOutputStream out = null;
-		out = fs.create(new Path(uri));
-		for (int i = 0; i < count; i++) {
-			String strTemp = type + "#" + i;
-			for (int n = 0; n < 8; n++) {
-				strTemp = strTemp + "#" + vf.get(i).get(n);
-			}
-			strTemp += "\n";
-			out.writeBytes(strTemp);
-		}
-		out.flush();
-		out.close();
 	}
 }
