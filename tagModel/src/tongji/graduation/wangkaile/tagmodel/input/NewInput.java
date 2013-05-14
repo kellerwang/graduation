@@ -57,9 +57,9 @@ public class NewInput {
 					tempObject.initializeProbability4UnlableObject();
 					index++;
 					indexNow++;
-					if (indexNow > 5) {
-						break;
-					}
+//					if (indexNow > 5) {
+//						break;
+//					}
 					System.out.println("null string");
 					continue;
 				}
@@ -134,9 +134,9 @@ public class NewInput {
 					tempSite.initializeProbability();
 					indexWebSite++;
 					indexNow++;
-					if (indexNow > 5) {
-						break;
-					}
+//					if (indexNow > 5) {
+//						break;
+//					}
 					System.out.println("null string");
 					continue;
 				}
