@@ -328,14 +328,12 @@ public class FileInput {
 		try {
 			FileWriter fw0 = new FileWriter(path, true);
 			PrintWriter pw0 = new PrintWriter(fw0);
-
 			for (int i = 0; i < v1Count; i++) {
 				for (int n = 0; n < 8; n++) {
 					pw0.println("v1f" + "#" + i + "#" + n + "#"
 							+ v1f.get(i).get(n));
 				}
 			}
-			
 			pw0.close();
 			fw0.close();
 			lineNum++;

@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map.Entry;
@@ -28,7 +30,7 @@ import tongji.graduation.wangkaile.tagmodel.NewTagModel.TagModelCombiner;
 import tongji.graduation.wangkaile.tagmodel.NewTagModel.TagModelMapper;
 import tongji.graduation.wangkaile.tagmodel.NewTagModel.TagModelReducer;
 
-public class TagModel4 {
+public class TagModel5 {
 	private String uriW13;
 	private String uriW23;
 	private String uriSumW13;
@@ -118,6 +120,8 @@ public class TagModel4 {
 				Context context) throws IOException, InterruptedException {
 			// deal with the input of v1 v2 v3
 			// -------------------------------------------------------------
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			System.out.println(df.format(new Date()));
 			for (Text val : values) {
 				String strArray[] = val.toString().split("#");
 				String targetFlag = strArray[0];
@@ -137,6 +141,7 @@ public class TagModel4 {
 					v3f.put(id, temp);
 				}
 			}
+			System.out.println("after map's input: " + df.format(new Date()));
 			// compute v1Count v2Count v3Count
 			// ---------------------------------------------------------------
 			int v1Count = W13.size();
@@ -157,6 +162,8 @@ public class TagModel4 {
 				}
 			}
 			int v3Count = w3Dic.size();
+			System.out.println("after deal with parameter: "
+					+ df.format(new Date()));
 			// ----------------------------------------------------------------
 			// the n is the classification id in the formula
 			int n = key.get();
@@ -180,6 +187,7 @@ public class TagModel4 {
 					v2f2.put(j, sum);
 				}
 			}
+			System.out.println("after compute v2: " + df.format(new Date()));
 			// compute v3f
 			// ----------------------------------------------------------------
 			for (int j = 0; j < v3Count; j++) {
@@ -206,6 +214,11 @@ public class TagModel4 {
 					v3f2.put(j, sum);
 				}
 			}
+			System.out.println("after compute v3: " + df.format(new Date()));
+			// 
+			// ----------------------------------------------------------------
+			
+			
 			// write v1f
 			// ----------------------------------------------------------------
 			for (Entry<Integer, Double> en : v1f.entrySet()) {
@@ -233,30 +246,29 @@ public class TagModel4 {
 				context.write(new Text(type), new Text(id + "#" + n + "#"
 						+ tempValue));
 			}
+			System.out.println("after write: " + df.format(new Date()));
 		}
-
 	}
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		DistributedCache.addCacheFile(new URI(
 				"/usr/wangkaile/tagmodel/parameters/parameter"), conf);
-//		conf.setFloat("mapred.job.shuffle.input.buffer.percent", 0.9f);
-		for (int i = 0; i < 10; i++) {
-			String input = "/usr/wangkaile/tagmodel/input/input" + i;
-			String output = "/usr/wangkaile/tagmodel/input/input" + (i + 1);
-			Job job = new Job(conf, "tagmodel" + (i + 1));
-			job.setJarByClass(TagModel.class);
-			job.setMapperClass(TagModelMapper.class);
-			job.setReducerClass(TagModelReducer.class);
-			job.setMapOutputKeyClass(IntWritable.class);
-			job.setMapOutputValueClass(Text.class);
-			job.setOutputKeyClass(Text.class);
-			job.setOutputValueClass(Text.class);
-			FileInputFormat.addInputPath(job, new Path(input));
-			FileOutputFormat.setOutputPath(job, new Path(output));
-			job.setNumReduceTasks(8);
-			job.waitForCompletion(true);
-		}
+		conf.setInt("mapred.reduce.parallel.copies", 8);
+		String input = "/usr/wangkaile/tagmodel/input1/input0";
+		String output = "/usr/wangkaile/tagmodel/input1/input1";
+		Job job = new Job(conf, "tagmodel");
+		job.setJarByClass(TagModel.class);
+		job.setMapperClass(TagModelMapper.class);
+		job.setReducerClass(TagModelReducer.class);
+		job.setMapOutputKeyClass(IntWritable.class);
+		job.setMapOutputValueClass(Text.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
+		FileSystem.get(job.getConfiguration()).delete(new Path(output), true);// 如果文件已存在删除
+		FileInputFormat.addInputPath(job, new Path(input));
+		FileOutputFormat.setOutputPath(job, new Path(output));
+		job.setNumReduceTasks(8);
+		System.exit(job.waitForCompletion(true) ? 0 : 1);
 	}
 }
