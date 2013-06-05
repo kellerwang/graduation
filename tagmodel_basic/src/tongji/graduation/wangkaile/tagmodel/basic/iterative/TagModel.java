@@ -1,12 +1,14 @@
 package tongji.graduation.wangkaile.tagmodel.basic.iterative;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map.Entry;
 
-// hashmap ÔÚ²»ÒªÇóÏß³ÌÍ¬²½Ê±Ð§ÂÊ¸ü¸ß
+// hashmap ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 public class TagModel {
 	// The function is the core of iterative algorithm
 	// There are three types of vertices. V1: type S, V2: type T, V3: Tag
@@ -39,11 +41,12 @@ public class TagModel {
 			double accuracyDiffThresh) {
 
 		// -----------------------------------------------------------------
-		// sumW13 SÀàÃ¿¸öobjectº¬ÓÐ¶àÉÙ¸ötag
-		// sumW23 TÀàÃ¿¸öobjectº¬ÓÐ¶àÉÙ¸ötag
-		// sumW31 ºÍSÀà¹ØÁªµÄtag³öÏÖµÄÆµÂÊ
-		// sumW32 ºÍTÀà¹ØÁªµÄtag³öÏÖµÄÆµÂÊ
+		// sumW13 Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½objectï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tag
+		// sumW23 Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½objectï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tag
+		// sumW31 ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tagï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// sumW32 ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tagï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
+		
 		// u belongs to V1
 		Hashtable<Integer, Double> sumW13 = new Hashtable<Integer, Double>();
 		for (Entry<Integer, Hashtable<Integer, Double>> en : W13.entrySet()) {
@@ -96,7 +99,7 @@ public class TagModel {
 		}
 
 		// ---------------------------------------------------------
-		// ³õÊ¼»¯Êä³ö½á¹û oldAccuracyÊÇÕýÈ·ÂÊµÄ»ù×¼Öµ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ oldAccuracyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		double oldAccuracy = 0;
 		Hashtable<Integer, List<Double>> v1f2, v2f2, v3f2;
 		v1f = new Hashtable<Integer, List<Double>>();
@@ -107,8 +110,8 @@ public class TagModel {
 		v3f2 = new Hashtable<Integer, List<Double>>();
 
 		// -----------------------------------------------------------
-		// v1Count£¬v2Count£¬v3Count·Ö±ð¼ÇÂ¼ÁËSÀà£¬TÀà¶ÔÏó£¬TagµÄÊýÁ¿
-		// w3Dic¼ÇÂ¼ÁËËùÒÔtag
+		// v1Countï¿½ï¿½v2Countï¿½ï¿½v3Countï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Tagï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// w3Dicï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tag
 
 		int v1Count = W13.size();
 		int v2Count = W23.size();
@@ -129,7 +132,7 @@ public class TagModel {
 		}
 		int v3Count = w3Dic.size();
 		// ------------------------------------------------------------
-		// °ÑËùÓÐÊä³öµÄ³õÊ¼Öµ¸³ÖµÎª1/categoryCount
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1/categoryCount
 		for (int i = 0; i < v1Count; i++) {
 			List<Double> fList = new ArrayList<Double>();
 			for (int j = 0; j < categoryCount; j++) {
@@ -152,8 +155,10 @@ public class TagModel {
 			v3f.put(i, fList);
 		}
 		// --------------------------------------------------------------
-		// µü´úËã·¨¿ªÊ¼
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		for (int i = 0; i < iteration; i++) {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//è®¾ç½®æ—¥æœŸæ ¼å¼
+			System.out.println(df.format(new Date()));// new Date()ä¸ºèŽ·å–å½“å‰ç³»ç»Ÿæ—¶é—´
 			System.out.println("Iteration " + (i + 1));
 			// ----------------------------------------------------------
 			// u belongs to v1
@@ -162,12 +167,12 @@ public class TagModel {
 				for (int n = 0; n < categoryCount; n++)
 					newf.add(0.0);
 				double denominator = alpha + sumW13.get(j);
-				// alphaÎÞÏÞ´ó£¬TypeSµÄÊäÈëÖµ×÷ÎªTypeSµÄÊä³öÖµ
+				// alphaç­‰äºŽæ— ç©·å¤§æ—¶æˆ‘ä»¬å®Œå…¨ç›¸ä¿¡TypeSä¸Šçš„ç±»åˆ«ä¿¡æ¯
 				if (alpha == Double.MAX_VALUE) {
 					for (int n = 0; n < categoryCount; n++)
 						newf.set(n, fixedv1f.get(j).get(n));
 				}
-				// alphaÎª0Ê±TypeSÀà²»´æÔÚ
+				// alphaä¸ç­‰äºŽé›¶
 				else if (alpha != 0) {
 					for (int n = 0; n < categoryCount; n++) {
 						double temp = newf.get(n) + (alpha / denominator)
@@ -189,6 +194,7 @@ public class TagModel {
 			}
 			// -----------------------------------------------------------
 			// u belongs to v2
+			System.out.println("begin compute v2f: " + df.format(new Date()));
 			for (int j = 0; j < v2Count; j++) {
 				List<Double> newf = new ArrayList<Double>();
 				for (int n = 0; n < categoryCount; n++)
@@ -235,11 +241,9 @@ public class TagModel {
 								}
 							}
 						}
-					} else {
-//						System.out.println("denominator == 0!");
 					}
 				}
-				// ÕâÐ©¶ÔÏó²»ÐèÒª·ÖÀà£¬ËäÈ»ËûÃÇÒ²ÔÚTypeTÀàÖÐ¶øÇÒ²»ÖªµÀÀà±ð
+				// 
 				else {
 					double denominator = sumW23.get(j);
 					for (int k = 0; k < v3Count; k++) {
@@ -254,6 +258,7 @@ public class TagModel {
 				}
 				v2f2.put(j, newf);
 			}
+			System.out.println("after compute v2f: " + df.format(new Date()));
 			// ----------------------------------------------------------------------
 			// u belongs to v3
 			for (int j = 0; j < v3Count; j++) {
@@ -286,8 +291,6 @@ public class TagModel {
 								}
 							}
 						}
-					} else {
-//						System.out.println("denominator == 0!");
 					}
 				} else {
 					double denominator = sumW32.get(j);
@@ -302,14 +305,13 @@ public class TagModel {
 								}
 							}
 						}
-					} else {
-//						System.out.println("denominator == 0!");
 					}
 				}
 				v3f2.put(j, newf);
 			}
+			System.out.println("after compute v3f: " + df.format(new Date()));
 			// ----------------------------------------------------------------------
-			// ¿´Ã¿´Î¼ÆËãµÄÕýÈ·ÂÊµÄ²îÖµ
+			// æŽ§åˆ¶è¿­ä»£ç»“æŸ
 			double accuracy = 0;
 			double accuracyDiff = 0;
 			if (i > 0) {
@@ -318,26 +320,27 @@ public class TagModel {
 				accuracyDiff = Math.abs(accuracy - oldAccuracy);
 				oldAccuracy = accuracy;
 				System.out.println("Accuracy Diff: " + accuracyDiff);
-				// È¡ÏûÁËµü´ú´ÎÊýµÄÏÞ¶¨
 				if (accuracyDiff < accuracyDiffThresh && i >= 10)
 					break;
 
 			}
 			// ------------------------------------------------------------------------
-			// Ò»´ÎÎª½á¹û¸³Öµ
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			v1f = clone(v1f2);
 			v2f = clone(v2f2);
 			v3f = clone(v3f2);
 
 			// ------------------------------------------------------------------------
-			// ÖØÐÂ¸³Öµ
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			v1f2 = new Hashtable<Integer, List<Double>>();
 			v2f2 = new Hashtable<Integer, List<Double>>();
 			v3f2 = new Hashtable<Integer, List<Double>>();
 		}
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println(df.format(new Date()));
 	}
 
-	// ¿ËÂ¡·½·¨
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private static Hashtable<Integer, List<Double>> clone(
 			Hashtable<Integer, List<Double>> v2f) {
 		Hashtable<Integer, List<Double>> retDic = new Hashtable<Integer, List<Double>>();
@@ -384,6 +387,7 @@ public class TagModel {
 			if (classid == label)
 				correct++;
 		}
+		double result = (correct / (double) totalCount);
 
 		Hashtable<Integer, Integer> resultClassCountDic = new Hashtable<Integer, Integer>();
 		Hashtable<Integer, Integer> truthClassCountDic = new Hashtable<Integer, Integer>();
@@ -415,7 +419,7 @@ public class TagModel {
 		List<Integer> tpList = new ArrayList<Integer>();
 
 		for (int i = 0; i < classCount; i++) {
-			// Ã¿¸öÀàÕýÈ·µÄ´ÎÊý
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			int tp = 0;
 			for (Entry<Integer, Integer> de : resultDic.entrySet()) {
 				int id = de.getKey();

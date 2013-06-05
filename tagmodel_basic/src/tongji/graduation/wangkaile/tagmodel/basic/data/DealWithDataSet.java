@@ -15,14 +15,14 @@ import tongji.graduation.wangkaile.tagmodel.basic.object.WebSite;
 
 public class DealWithDataSet {
 
-	// ´æ´¢×îÖÕwebObjectÊı¾İ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½webObjectï¿½ï¿½ï¿½ï¿½
 	private static Hashtable<Integer, WebObject> webObjectSet;
 	private static Hashtable<String, Integer> tagSet;
 	private static Hashtable<Integer, WebSite> webSiteSet;
-	// Õâ¸öindex¾ÍÊÇºóÃæTagModelÖĞwebObjectµÄid
+	// ï¿½ï¿½ï¿½ï¿½indexï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TagModelï¿½ï¿½webObjectï¿½ï¿½id
 	private static int index = 0;
 	private static int indexWebSite = 0;
-	// Õâ¸öindexTag¾ÍÊÇºóÃæTagModelÖĞtagµÄid
+	// ï¿½ï¿½ï¿½ï¿½indexTagï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TagModelï¿½ï¿½tagï¿½ï¿½id
 	private static int indexTag = 0;
 
 	public static void readFileByLines4Amazon(String fileName, int lable) {
@@ -30,30 +30,25 @@ public class DealWithDataSet {
 		BufferedReader reader = null;
 
 		try {
-			// System.out.println("ÒÔĞĞÎªµ¥Î»¶ÁÈ¡ÎÄ¼şÄÚÈİ£¬Ò»´Î¶ÁÒ»ÕûĞĞ£º");
 			reader = new BufferedReader(new FileReader(file));
 			String tempString = null;
 			int flag = 0;
-			// Ò»´Î¶ÁÈëÒ»ĞĞ£¬Ö±µ½¶ÁÈënullÎªÎÄ¼ş½áÊø
+			// ä¸´æ—¶å­˜å‚¨äºšé©¬é€Šå•†å“å¯¹è±¡ä¿¡æ¯
 			WebObject tempObject = new WebObject(lable);
 			tempObject.initializeProbability4UnlableObject();
 			while ((tempString = reader.readLine()) != null) {
-				// ¶Áµ½¿ÕĞĞ£¬¼´ÂíÉÏ´¦ÀíÏÂÒ»¶ÔÏó¡£description¿ÉÒÔÊÇ¿ÕĞĞ£¡
+				// è¯»åˆ°ç©ºè¡Œï¼Œä¸€ä¸ªæ•°æ®å—å†™å…¥å®Œæˆ
 				if (tempString.trim().equals("") && flag != 1) {
 					flag = 0;
 					webObjectSet.put(index, tempObject);
 					tempObject = new WebObject(lable);
 					tempObject.initializeProbability4UnlableObject();
 					index++;
-					System.out.println("¿ÕĞĞ");
 					continue;
 				}
-				// ´ËÊ±ÊäÈëĞĞÎªtags
+				// ç°åœ¨å¼€å§‹è¯»å…¥ç¤¾ä¼šæ ‡ç­¾
 				if (flag == 2) {
 					String[] strArray = tempString.split("	");
-					// int tempInt = strArray.length;
-					System.out.println("tagName: " + strArray[0]
-							+ "	frequency: " + strArray[1]);
 					String tempTag = strArray[0];
 					int tempInt = indexTag;
 					if (tagSet.containsKey(tempTag)) {
@@ -67,15 +62,13 @@ public class DealWithDataSet {
 					tempObject.getTagList().put(tempInt, tempFrequency);
 					continue;
 				}
-				// Èç¹ûÊÇÊı¾İidºÍÃèÊö
+				// å¼€å§‹è¯»ä¸€ä¸ªæ–°çš„æ•°æ®å—
 				if (flag == 0 || flag == 1) {
 					switch (flag) {
 					case 0:
-						System.out.println("id: " + tempString);
 						tempObject.setRealId(tempString);
 						break;
 					case 1:
-						System.out.println("description: " + tempString);
 						tempObject.setDescription(tempString);
 						break;
 					default:
@@ -103,30 +96,25 @@ public class DealWithDataSet {
 		BufferedReader reader = null;
 
 		try {
-			// System.out.println("ÒÔĞĞÎªµ¥Î»¶ÁÈ¡ÎÄ¼şÄÚÈİ£¬Ò»´Î¶ÁÒ»ÕûĞĞ£º");
 			reader = new BufferedReader(new FileReader(file));
 			String tempString = null;
 			int flag = 0;
-			// Ò»´Î¶ÁÈëÒ»ĞĞ£¬Ö±µ½¶ÁÈënullÎªÎÄ¼ş½áÊø
+			// å­˜å‚¨ç½‘ç«™å¯¹è±¡çš„ä¸´æ—¶å˜é‡
 			WebSite tempSite = new WebSite(lable);
 			tempSite.initializeProbability();
 			while ((tempString = reader.readLine()) != null) {
-				// ¶Áµ½¿ÕĞĞ£¬¼´ÂíÉÏ´¦ÀíÏÂÒ»¶ÔÏó¡£description¿ÉÒÔÊÇ¿ÕĞĞ£¡
+				// è¯»åˆ°ç©ºè¡Œï¼Œä¸€ä¸ªæ•°æ®å—å¤„ç†ç»“æŸ
 				if (tempString.trim().equals("")) {
 					flag = 0;
 					webSiteSet.put(indexWebSite, tempSite);
 					tempSite = new WebSite(lable);
 					tempSite.initializeProbability();
 					indexWebSite++;
-					System.out.println("¿ÕĞĞ");
 					continue;
 				}
-				// ´ËÊ±ÊäÈëĞĞÎªtags
+				// å¼€å§‹å¤„ç†ç¤¾ä¼šæ ‡ç­¾
 				if (flag == 1) {
 					String[] strArray = tempString.split("	");
-					// int tempInt = strArray.length;
-					System.out.println("tagName: " + strArray[0]
-							+ "	frequency: " + strArray[1]);
 					String tempTag = strArray[0];
 					int tempInt = indexTag;
 					if (tagSet.containsKey(tempTag)) {
@@ -139,9 +127,8 @@ public class DealWithDataSet {
 					tempSite.getTagList().put(tempInt, tempFrequency);
 					continue;
 				}
-				// Èç¹ûÊÇÊı¾İÃèÊö
+				// ä¸€ä¸ªæ–°çš„æ•°æ®å—å¼€å§‹
 				if (flag == 0) {
-					System.out.println("webSiteAddress: " + tempString);
 					tempSite.setDescription(tempString);
 					flag++;
 					continue;
@@ -168,24 +155,27 @@ public class DealWithDataSet {
 		webObjectSet = new Hashtable<Integer, WebObject>();
 		tagSet = new Hashtable<String, Integer>();
 		webSiteSet = new Hashtable<Integer, WebSite>();
-		// AmazonÊı¾İÊäÈë
-		readFileByLines4Amazon("data/amazon/Books.txt", 0);
-		readFileByLines4Amazon("data/amazon/Electronics.txt", 1);
-		readFileByLines4Amazon("data/amazon/HealthPersonCare.txt", 2);
-		readFileByLines4Amazon("data/amazon/HomeGarden.txt", 3);
-		readFileByLines4Amazon("data/amazon/Jewelry.txt", 4);
-		readFileByLines4Amazon("data/amazon/Music.txt", 5);
-		readFileByLines4Amazon("data/amazon/OfficeProducts.txt", 6);
-		readFileByLines4Amazon("data/amazon/PetSupplies.txt", 7);
-		// odpÊı¾İÊäÈë
-		readFileByLines4Odp("data/odp/Books.txt", 0);
-		readFileByLines4Odp("data/odp/ConsumerElectronics.txt", 1);
-		readFileByLines4Odp("data/odp/Health.txt", 2);
-		readFileByLines4Odp("data/odp/HomeandGarden.txt", 3);
-		readFileByLines4Odp("data/odp/Jewelry.txt", 4);
-		readFileByLines4Odp("data/odp/Music.txt", 5);
-		readFileByLines4Odp("data/odp/Office.txt", 6);
-		readFileByLines4Odp("data/odp/Pet.txt", 7);
+		for (int dataSize = 0; dataSize < 6; dataSize++) {
+			// Amazonï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			readFileByLines4Amazon("data/amazon/Books.txt", 0);
+			readFileByLines4Amazon("data/amazon/Electronics.txt", 1);
+			readFileByLines4Amazon("data/amazon/HealthPersonCare.txt", 2);
+			readFileByLines4Amazon("data/amazon/HomeGarden.txt", 3);
+			readFileByLines4Amazon("data/amazon/Jewelry.txt", 4);
+			readFileByLines4Amazon("data/amazon/Music.txt", 5);
+			readFileByLines4Amazon("data/amazon/OfficeProducts.txt", 6);
+			readFileByLines4Amazon("data/amazon/PetSupplies.txt", 7);
+			// odpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			readFileByLines4Odp("data/odp/Books.txt", 0);
+			readFileByLines4Odp("data/odp/ConsumerElectronics.txt", 1);
+			readFileByLines4Odp("data/odp/Health.txt", 2);
+			readFileByLines4Odp("data/odp/HomeandGarden.txt", 3);
+			readFileByLines4Odp("data/odp/Jewelry.txt", 4);
+			readFileByLines4Odp("data/odp/Music.txt", 5);
+			readFileByLines4Odp("data/odp/Office.txt", 6);
+			readFileByLines4Odp("data/odp/Pet.txt", 7);
+		}
+
 		System.out.println("Input Over");
 		TagModel tagmodel = new TagModel();
 		Hashtable<Integer, List<Double>> fixedv1f = new Hashtable<Integer, List<Double>>();
@@ -195,32 +185,33 @@ public class DealWithDataSet {
 		Hashtable<Integer, Hashtable<Integer, Double>> W13 = new Hashtable<Integer, Hashtable<Integer, Double>>();
 		Hashtable<Integer, Hashtable<Integer, Double>> W23 = new Hashtable<Integer, Hashtable<Integer, Double>>();
 		double accuracyDiffThresh;
-		for(Entry<Integer, WebSite> en : webSiteSet.entrySet()){
+		for (Entry<Integer, WebSite> en : webSiteSet.entrySet()) {
 			int id = en.getKey();
 			List<Double> listProbability = en.getValue().getProbability();
 			fixedv1f.put(id, listProbability);
 		}
-		for(Entry<Integer, WebObject> en : webObjectSet.entrySet()){
+		for (Entry<Integer, WebObject> en : webObjectSet.entrySet()) {
 			int id = en.getKey();
 			List<Double> listProbability = en.getValue().getProbability();
 			priorv2f.put(id, listProbability);
 		}
-		for(Entry<Integer, WebObject> en : webObjectSet.entrySet()){
+		for (Entry<Integer, WebObject> en : webObjectSet.entrySet()) {
 			int id = en.getKey();
 			int lable = en.getValue().getLable();
 			trueV2ClassDic.put(id, lable);
 		}
-		for(Entry<Integer, WebSite> en : webSiteSet.entrySet()){
+		for (Entry<Integer, WebSite> en : webSiteSet.entrySet()) {
 			int id = en.getKey();
 			Hashtable<Integer, Double> tagSetTemp = en.getValue().getTagList();
 			W13.put(id, tagSetTemp);
 		}
-		for(Entry<Integer, WebObject> en : webObjectSet.entrySet()){
+		for (Entry<Integer, WebObject> en : webObjectSet.entrySet()) {
 			int id = en.getKey();
 			Hashtable<Integer, Double> tagSetTemp = en.getValue().getTagList();
 			W23.put(id, tagSetTemp);
 		}
-		tagmodel.Iterate(8, 10, Double.MAX_VALUE, 0, 0, fixedv1f, fixedv2f, priorv2f, trueV2ClassDic, W13, W23, 0.1);
+		tagmodel.Iterate(8, 10, Double.MAX_VALUE, 0, 0, fixedv1f, fixedv2f,
+				priorv2f, trueV2ClassDic, W13, W23, 0.01);
 	}
 
 }

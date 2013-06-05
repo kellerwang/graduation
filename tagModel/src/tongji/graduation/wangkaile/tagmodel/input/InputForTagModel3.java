@@ -170,7 +170,7 @@ public class InputForTagModel3 {
 		webObjectSet = new Hashtable<Integer, WebObject>();
 		tagSet = new Hashtable<String, Integer>();
 		webSiteSet = new Hashtable<Integer, WebSite>();
-		for (int dataSize = 0; dataSize < 1; dataSize++) {
+		for (int dataSize = 0; dataSize < 10; dataSize++) {
 			readFileByLines4Amazon("data/amazon/Books.txt", 0);
 			readFileByLines4Amazon("data/amazon/Electronics.txt", 1);
 			readFileByLines4Amazon("data/amazon/HealthPersonCare.txt", 2);
